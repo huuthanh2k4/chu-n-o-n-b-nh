@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chuẩn đoán bệnh qua Firebase</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .container {
+      margin-top: 50px; 
+      max-width: 700px; 
+      background: white; 
+      padding: 20px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .hidden { display: none; }
+    /* CSS cho màn hình điện thoại */
+    @media (max-width: 768px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2 class="text-center">Chuẩn đoán bệnh bằng học máy Machine learning</h2>
+  <form id="diagnosisForm">
+    <!-- Thông tin người dùng -->
+    <div class="mb-3">
+      <label for="userName" class="form-label">Tên người dùng:</label>
+      <input type="text" class="form-control" id="userName" name="userName" required>
+    </div>
+    <div class="mb-3">
+      <label for="diagnosisType" class="form-label">Chọn loại chuẩn đoán:</label>
+      <select class="form-select" id="diagnosisType" name="diagnosisType" required>
+        <option value="">-- Chọn --</option>
+        <option value="heart1">Kiểm tra tim mạch</option>
+        <option value="depression2">Chuẩn đoán trầm cảm</option>
+        <option value="NutriAI">Chuẩn đoán về cân nặng</option>
+      </select>
+    </div>
+
+    <!-- Phần kiểm tra tim mạch -->
+    <div id="heartSection" class="hidden">
+      <h4>Thông số Tim Mạch</h4>
+      <div class="mb-3">
+        <label for="heart_age" class="form-label">Tuổi:</label>
+        <input type="number" class="form-control" id="heart_age" name="heart_age" required>
+      </div>
+      <div class="mb-3">
+        <label for="heart_gender" class="form-label">Giới tính (0: Nam, 1: Nữ):</label>
+        <input type="number" class="form-control" id="heart_gender" name="heart_gender" required min="0" max="1">
+      </div>
+      <div class="mb-3">
+        <label for="chest_pain" class="form-label">Triệu chứng đau ngực:</label>
+        <select class="form-select" id="chest_pain" name="chest_pain" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Typical angina</option>
+          <option value="0">Asymptomatic</option>
+          <option value="3">Non-anginal pain</option>
+          <option value="2">Atypical angina</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="blood_pressure" class="form-label">Huyết áp:</label>
+        <input type="number" class="form-control" id="blood_pressure" name="blood_pressure" required>
+      </div>
+      <div class="mb-3">
+        <label for="cholesterol" class="form-label">Cholesterol:</label>
+        <input type="number" class="form-control" id="cholesterol" name="cholesterol" required>
+      </div>
+      <div class="mb-3">
+        <label for="heartbeat" class="form-label">Nhịp tim:</label>
+        <input type="number" class="form-control" id="heartbeat" name="heartbeat" required>
+      </div>
+      <div class="mb-3">
+        <label for="thalassemia" class="form-label">Thalassemia:</label>
+        <select class="form-select" id="thalassemia" name="thalassemia" required>
+          <option value="">-- Chọn Thalassemia --</option>
+          <option value="3">Bình thường</option>
+          <option value="6">Khiếm khuyết cố định</option>
+          <option value="7">Kiếm khuyết có thể đảo ngược</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Phần chuẩn đoán trầm cảm -->
+    <div id="depressionSection" class="hidden">
+      <h4>Thông số Trầm Cảm</h4>
+      <div class="mb-3">
+        <label for="depress_gender" class="form-label">Giới tính (1: Nam, 0: Nữ):</label>
+        <input type="number" class="form-control" id="depress_gender" name="depress_gender" required min="0" max="1">
+      </div>
+      <div class="mb-3">
+        <label for="depress_age" class="form-label">Tuổi:</label>
+        <input type="number" class="form-control" id="depress_age" name="depress_age" required>
+      </div>
+      <div class="mb-3">
+        <label for="ap_luc_hoc_tap" class="form-label">Áp lực học tập (0-5):</label>
+        <input type="number" class="form-control" id="ap_luc_hoc_tap" name="ap_luc_hoc_tap" required min="0" max="5">
+      </div>
+      <div class="mb-3">
+        <label for="diem_trung_binh" class="form-label">Điểm trung bình (CGPA):</label>
+        <input type="number" step="0.01" class="form-control" id="diem_trung_binh" name="diem_trung_binh" required>
+      </div>
+      <div class="mb-3">
+        <label for="muc_do_hai_long" class="form-label">Mức độ hài lòng trong học tập (0-5):</label>
+        <input type="number" class="form-control" id="muc_do_hai_long" name="muc_do_hai_long" required min="0" max="5">
+      </div>
+      <div class="mb-3">
+        <label for="thoi_gian_ngu" class="form-label">Thời gian ngủ (1: Dưới 5 giờ, 2: 5-6 giờ, 3: 7-8 giờ, 4: Trên 8 giờ):</label>
+        <input type="number" class="form-control" id="thoi_gian_ngu" name="thoi_gian_ngu" required min="1" max="4">
+      </div>
+      <div class="mb-3">
+        <label for="thoi_quen_an_uong" class="form-label">Thói quen ăn uống (1: Không lành mạnh, 2: Trung bình, 3: Lành mạnh):</label>
+        <input type="number" class="form-control" id="thoi_quen_an_uong" name="thoi_quen_an_uong" required min="1" max="3">
+      </div>
+      <div class="mb-3">
+        <label for="su_tu_tu" class="form-label">Bạn đã từng có ý nghĩ tự tử chưa? (0: Không, 1: Có):</label>
+        <input type="number" class="form-control" id="su_tu_tu" name="su_tu_tu" required min="0" max="1">
+      </div>
+      <div class="mb-3">
+        <label for="so_gio_lam_hoc" class="form-label">Số giờ làm việc/học tập trong 1 ngày:</label>
+        <input type="number" class="form-control" id="so_gio_lam_hoc" name="so_gio_lam_hoc" required>
+      </div>
+      <div class="mb-3">
+        <label for="ap_luc_tai_chinh" class="form-label">Áp lực tài chính (0-5):</label>
+        <input type="number" class="form-control" id="ap_luc_tai_chinh" name="ap_luc_tai_chinh" required min="0" max="5">
+      </div>
+      <div class="mb-3">
+        <label for="tien_su_benh_tam_than" class="form-label">Tiền sử bệnh tâm thần trong gia đình (0: Không, 1: Có):</label>
+        <input type="number" class="form-control" id="tien_su_benh_tam_than" name="tien_su_benh_tam_than" required min="0" max="1">
+      </div>
+      <div class="mb-3">
+        <label for="model_choice_depress" class="form-label">Chọn model để dự đoán:</label>
+        <select class="form-select" id="model_choice_depress" name="model_choice_depress" required>
+          <option value="">-- Chọn model --</option>
+          <option value="knn">KNN (CDTC_knn.sav) – Độ chính xác 83.25%</option>
+          <option value="mlp">MLP (CDTC_MLP.sav) – Độ chính xác 84.53%</option>
+          <option value="model3">Hồi quy logic (model.sav) – Độ chính xác 84%</option>
+          <option value="tree">Cây quyết định (model_cay_quyet_dinh.sav) – Độ chính xác 81.91%</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Phần chuẩn đoán bệnh béo phì -->
+
+        <div id="obesitySection" class="hidden">
+            <h4>Nhập hồ sơ bệnh nhân để dự đoán bệnh béo phì</h4>
+        <div class="mb-3">
+            <label for="obesity_gender" class="form-label">Giới tính :</label>
+            <select class="form-select" id="obesity_gender" name="obesity_gender" required>
+                <option value="">-- Chọn giới tính --</option>
+                <option value="1">Nam</option>
+                <option value="0">Nữ</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="obesity_age" class="form-label">Tuổi :</label>
+            <input type="number" class="form-control" id="obesity_age" name="obesity_age" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="obesity_heght" class="form-label">Chiều cao(mét):</label>
+            <input type="number" step="0.01" class="form-control" id="obesity_heght" name="obesity_heght" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="obesity_weight" class="form-label">Cân nặng(kg):</label>
+            <input type="number" step="0.01" class="form-control" id="obesity_weight" name="obesity_weight" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="family_history_with_overweight" class="form-label">Gia đình có người thừa cân không ? :</label>
+            <select class="form-select" id="family_history_with_overweight" name="family_history_with_overweight" required>
+                <option value="">-- Chọn gia đình có người thừa cân không ? --</option>
+                <option value="1">Có</option>
+                <option value="0">Không</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="FAVC" class="form-label">Có tiêu thụ thực phẩm giàu calo thường xuyên không ? :</label>
+            <select class="form-select" id="FAVC" name="FAVC" required>
+                <option value="">-- Chọn có tiêu thụ thực phẩm giàu calo thường xuyên không ?
+                    <option value="1">Có</option>
+                    <option value="0">Không</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="FCVC" class="form-label">Mức độ tiêu thụ rau: </label>
+            <select class="form-select" id="FCVC" name="FCVC" required>
+                <option value="">-- Chọn mức độ tiêu thụ rau --</option>
+                <option value="0">Ăn rất ít hoặc ko ăn</option>
+                <option value="1">ăn vừa đủ</option>
+                <option value="2">Ăn nhiều</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="NCP" class="form-label">Số bữa ăn chính trong ngày: </label>
+            <select class="form-select" id="NCP" name="NCP" required>
+                <option value="">-- Chọn số bữa ăn chính trong ngày --</option>
+                <option value="1">1 bữa</option>
+                <option value="2">2 bữa</option>
+                <option value="3">3 bữa</option>
+                <option value="4">nhiều hơn 3 bữa</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="CAEC" class="form-label">Thói quen ăn vặt giữa các bữa ăn: </label>
+            <select class="form-select" id="CAEC" name="CAEC" required>
+                <option value="">-- Chọn thói quen ăn vặt giữa các bữa ăn --</option>
+                <option value="0">Không (never)</option>
+                <option value="1">Thi thoảng (Sometimes)</option>
+                <option value="2">Thường xuyên (Frequently)</option>
+                <option value="3">Luôn luôn (Always)</option>
+            </select>
+        </div>
+
+        <div class="SMOKE">
+            <label for="SMOKE" class="form-label">Có hút thuốc không: </label>
+            <select class="form-select" id="SMOKE" name="SMOKE" required >
+                <option value="">-- Chọn có hút thuốc không --</option>
+                <option value="1">Có</option>
+                <option value="0">Không</option>
+            </select>
+        </div>
+        
+        <div class="CH2O">
+            <label for="CH2O" class="form-label">Lượng nước uống hằng ngày: </label>
+            <input type="number" step="0.1" class="form-control" id="CH2O" name="CH2O" required>
+        </div>
+        
+        <div class="SCC">
+            <label for="SCC" class="form-label">Có theo dõi lượng Calo tiêu thụ hay ko?</label>
+            <select class="form-select" id="SCC" name="SCC" required >  
+                <option value="">-- Chọn có theo dõi lượng Calo tiêu thụ hay ko --</option>
+                <option value="0">Không</option>
+                <option value="1">Có</option>
+            </select>
+        </div>
+        
+        <div class="FAF">
+            <label for="FAF" class="form-label">Tần suất hoạt động thể chất: </label>
+            <select class="form-select" id="FAF" name="FAF" required >
+                <option value="">-- Chọn tần suất hoạt động thể chất --</option>
+                <option value="0">Không hoạt động</option>
+                <option value="1">Hoạt động ở mức thấp</option>
+                <option value="2">Hoạt động ở mức trung bình</option>
+                <option value="3">Hoạt động thể chất thường xuyên </option>
+            </select>
+        </div>
+        
+        <div class="TUE">
+            <label for="TUE" class="form-label">Thời gian sử dụng thiết bị công nghệ</label>
+            <select class="form-select" id="TUE" name="TUE" required >
+                <option value="">-- Chọn thời gian sử dụng thiết bị công nghệ --</option>
+                <option value="0">Sử dụng rất ít hoặc chỉ dùng với mục dích cơ bản</option>
+                <option value="1">Sử dụng ở mức trung bình (vừa đủ cho học tập và làm việc)</option>
+                <option value="2">Sử dụng ở mức cao (dành phần lớn thời gian để sử dụng)</option>
+            </select>
+        </div>
+        
+        <div class="CALC">
+            <label for="CALC" class="form-label">Mức tiêu thụ rượu bia</label>
+            <select class="form-select" id="CALC" name="CALC" required >
+                <option value="">-- Chọn mức tiêu thụ rượu bia --</option>
+                <option value="0">Không (never)</option>
+                <option value="1">Thi thoảng (Sometimes)</option>
+                <option value="2">Thường xuyên (Frequently)</option>
+                <option value="3">Luôn luôn (Always)</option>
+            </select>
+        </div>
+        
+        <div class="MTRANS">
+            <label for="MTRANS" class="form-label">Phương tiện di chuyển chính:</label>
+            <select class="form-select" id="MTRANS" name="MTRANS" required >
+                <option value="">-- Chọn phương tiện di chuyển chính --</option>
+                <option value="0">Public Transportation(phương tiện công cộng)</option>
+                <option value="1">Ô tô</option>
+                <option value="2">Đi bộ</option>
+                <option value="3">Xe máy</option>
+                <option value="4">Xe đạp</option>
+            </select>
+        </div>
+
+        </div>
+
+
+    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+  </form>
+  <!-- Thông báo lưu dữ liệu -->
+  <div id="status" class="mt-3"></div>
+  <!-- Link đến trang lịch sử chuẩn đoán -->
+  <div class="mt-3">
+    <a href="ketQua.html" class="btn btn-secondary">Xem lịch sử chuẩn đoán</a>
+  </div>
+</div>
+
+<!-- Firebase và mã JS -->
+<script type="module">
+  // Import các module Firebase
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
+
+  // Cấu hình Firebase của bạn
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNFQbKCFQjHzJwEO2kuRyo3Tyr63FUlWw",
+    authDomain: "bai-test-2ae56.firebaseapp.com",
+    databaseURL: "https://bai-test-2ae56-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "bai-test-2ae56",
+    storageBucket: "bai-test-2ae56.appspot.com",
+    messagingSenderId: "152935522979",
+    appId: "1:152935522979:web:070ca9c7da4a4867959516",
+    measurementId: "G-9RQJH9ZCBJ"
+  };
+
+  // Khởi tạo Firebase
+  const appFirebase = initializeApp(firebaseConfig);
+  const database = getDatabase(appFirebase);
+
+  // Lấy IP của người dùng thông qua API ipify
+  let userIP = "unknown";
+  fetch("https://api.ipify.org?format=json")
+    .then(response => response.json())
+    .then(data => {
+      userIP = data.ip;
+    })
+    .catch(err => console.error("Không lấy được IP:", err));
+
+  // Xử lý hiển thị form dựa trên lựa chọn của người dùng
+  const diagnosisType = document.getElementById("diagnosisType");
+  const heartSection = document.getElementById("heartSection");
+  const depressionSection = document.getElementById("depressionSection");
+
+  // Ban đầu, disable tất cả input của 2 section
+  heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+  depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+
+  diagnosisType.addEventListener("change", function() {
+    if (this.value === "heart1") {
+      heartSection.classList.remove("hidden");
+      depressionSection.classList.add("hidden");
+      heartSection.querySelectorAll("input, select").forEach(el => el.disabled = false);
+      depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+    } else if (this.value === "depression2") {
+      depressionSection.classList.remove("hidden");
+      heartSection.classList.add("hidden");
+      depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = false);
+      heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+    } else if (this.value === "NutriAI") {
+      obesitySection.classList.remove("hidden");
+      heartSection.classList.add("hidden");
+      depressionSection.classList.add("hidden");
+      obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = false);
+      heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+    } else {
+      heartSection.classList.add("hidden");
+      depressionSection.classList.add("hidden");
+      heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+    }
+  });
+
+  // Xử lý submit form
+  const form = document.getElementById("diagnosisForm");
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(form);
+    // Thu thập dữ liệu chung
+    const userName = formData.get("userName");
+    const diagnosis = formData.get("diagnosisType");
+    const ip = userIP;
+
+    // Thêm trường "ket_qua" với giá trị mặc định là "null"
+    let dataToSave = {
+      userName,
+      diagnosis,
+      ip,
+      timestamp: new Date().toLocaleString(),
+      ket_qua: "null"
+    };
+
+    if (diagnosis === "heart1") {
+      dataToSave = {
+        ...dataToSave,
+        age: formData.get("heart_age"),
+        gender: formData.get("heart_gender"),
+        chest_pain: formData.get("chest_pain"),
+        blood_pressure: formData.get("blood_pressure"),
+        cholesterol: formData.get("cholesterol"),
+        heartbeat: formData.get("heartbeat"),
+        thalassemia: formData.get("thalassemia")
+      };
+    } else if (diagnosis === "depression2") {
+      dataToSave = {
+        ...dataToSave,
+        gender: formData.get("depress_gender"),
+        age: formData.get("depress_age"),
+        ap_luc_hoc_tap: formData.get("ap_luc_hoc_tap"),
+        diem_trung_binh: formData.get("diem_trung_binh"),
+        muc_do_hai_long: formData.get("muc_do_hai_long"),
+        thoi_gian_ngu: formData.get("thoi_gian_ngu"),
+        thoi_quen_an_uong: formData.get("thoi_quen_an_uong"),
+        su_tu_tu: formData.get("su_tu_tu"),
+        so_gio_lam_hoc: formData.get("so_gio_lam_hoc"),
+        ap_luc_tai_chinh: formData.get("ap_luc_tai_chinh"),
+        tien_su_benh_tam_than: formData.get("tien_su_benh_tam_than"),
+        model_choice: formData.get("model_choice_depress")
+      };
+    } else if (diagnosis === "NutriAI") {
+        dataToSave = {
+            ...dataToSave,
+            gender: formData.get("obesity_gender"),
+            age: formData.get("obesity_age"),
+            height: formData.get("obesity_height"),
+            weight: formData.get("obesity_weight"),
+            family_history_with_overweight: formData.get("family_history_with_overweight"),
+            FAVC: formData.get("FAVC"),
+            FCVC: formData.get("FCVC"),
+            CAEC: formData.get("CAEC"),
+            SMOKE: formData.get("SMOKE"),
+            CH2O: formData.get("CH2O"),
+            SCC: formData.get("SCC"),
+            FAF: formData.get("FAF"),
+            TUE: formData.get("TUE"),
+            CALC: formData.get("CALC"),
+            MTRANS: formData.get("MTRANS"),
+        };
+    }  
+
+    const diagnosisRef = ref(database, "diagnosis");
+    push(diagnosisRef, dataToSave)
+      .then(() => {
+        document.getElementById("status").innerHTML = "<div class='alert alert-success'>Dữ liệu đã được lưu thành công!</div>";
+        form.reset();
+        heartSection.classList.add("hidden");
+        depressionSection.classList.add("hidden");
+        // Sau khi reset form, disable lại các input của 2 section
+        heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+        depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi lưu dữ liệu:", error);
+        document.getElementById("status").innerHTML = "<div class='alert alert-danger'>Có lỗi khi lưu dữ liệu!</div>";
+      });
+  });
+</script>
+</body>
+</html>
