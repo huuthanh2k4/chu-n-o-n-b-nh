@@ -29,7 +29,7 @@
 <div class="container">
   <h2 class="text-center">Chuẩn đoán bệnh bằng học máy Machine learning</h2>
   <form id="diagnosisForm">
-    <!-- Thông tin người dùng -->
+    <!-- Thông tin người dùng chung -->
     <div class="mb-3">
       <label for="userName" class="form-label">Tên người dùng:</label>
       <input type="text" class="form-control" id="userName" name="userName" required>
@@ -40,13 +40,14 @@
         <option value="">-- Chọn --</option>
         <option value="heart1">Kiểm tra tim mạch</option>
         <option value="depression2">Chuẩn đoán trầm cảm</option>
-        <option value="NutriAI">Chuẩn đoán về cân nặng</option>
+        <option value="NutriAI">Chuẩn đoán bệnh béo phì</option>
       </select>
     </div>
 
     <!-- Phần kiểm tra tim mạch -->
     <div id="heartSection" class="hidden">
       <h4>Thông số Tim Mạch</h4>
+      <!-- Các trường của phần tim mạch (như cũ) -->
       <div class="mb-3">
         <label for="heart_age" class="form-label">Tuổi:</label>
         <input type="number" class="form-control" id="heart_age" name="heart_age" required>
@@ -91,6 +92,7 @@
     <!-- Phần chuẩn đoán trầm cảm -->
     <div id="depressionSection" class="hidden">
       <h4>Thông số Trầm Cảm</h4>
+      <!-- Các trường của phần trầm cảm (như cũ) -->
       <div class="mb-3">
         <label for="depress_gender" class="form-label">Giới tính (1: Nam, 0: Nữ):</label>
         <input type="number" class="form-control" id="depress_gender" name="depress_gender" required min="0" max="1">
@@ -148,152 +150,136 @@
     </div>
 
     <!-- Phần chuẩn đoán bệnh béo phì -->
-
-        <div id="obesitySection" class="hidden">
-            <h4>Nhập hồ sơ bệnh nhân để dự đoán bệnh béo phì</h4>
-        <div class="mb-3">
-            <label for="obesity_gender" class="form-label">Giới tính :</label>
-            <select class="form-select" id="obesity_gender" name="obesity_gender" required>
-                <option value="">-- Chọn giới tính --</option>
-                <option value="1">Nam</option>
-                <option value="0">Nữ</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="obesity_age" class="form-label">Tuổi :</label>
-            <input type="number" class="form-control" id="obesity_age" name="obesity_age" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="obesity_heght" class="form-label">Chiều cao(mét):</label>
-            <input type="number" step="0.01" class="form-control" id="obesity_heght" name="obesity_heght" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="obesity_weight" class="form-label">Cân nặng(kg):</label>
-            <input type="number" step="0.01" class="form-control" id="obesity_weight" name="obesity_weight" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="family_history_with_overweight" class="form-label">Gia đình có người thừa cân không ? :</label>
-            <select class="form-select" id="family_history_with_overweight" name="family_history_with_overweight" required>
-                <option value="">-- Chọn gia đình có người thừa cân không ? --</option>
-                <option value="1">Có</option>
-                <option value="0">Không</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="FAVC" class="form-label">Có tiêu thụ thực phẩm giàu calo thường xuyên không ? :</label>
-            <select class="form-select" id="FAVC" name="FAVC" required>
-                <option value="">-- Chọn có tiêu thụ thực phẩm giàu calo thường xuyên không ?
-                    <option value="1">Có</option>
-                    <option value="0">Không</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="FCVC" class="form-label">Mức độ tiêu thụ rau: </label>
-            <select class="form-select" id="FCVC" name="FCVC" required>
-                <option value="">-- Chọn mức độ tiêu thụ rau --</option>
-                <option value="0">Ăn rất ít hoặc ko ăn</option>
-                <option value="1">ăn vừa đủ</option>
-                <option value="2">Ăn nhiều</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="NCP" class="form-label">Số bữa ăn chính trong ngày: </label>
-            <select class="form-select" id="NCP" name="NCP" required>
-                <option value="">-- Chọn số bữa ăn chính trong ngày --</option>
-                <option value="1">1 bữa</option>
-                <option value="2">2 bữa</option>
-                <option value="3">3 bữa</option>
-                <option value="4">nhiều hơn 3 bữa</option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="CAEC" class="form-label">Thói quen ăn vặt giữa các bữa ăn: </label>
-            <select class="form-select" id="CAEC" name="CAEC" required>
-                <option value="">-- Chọn thói quen ăn vặt giữa các bữa ăn --</option>
-                <option value="0">Không (never)</option>
-                <option value="1">Thi thoảng (Sometimes)</option>
-                <option value="2">Thường xuyên (Frequently)</option>
-                <option value="3">Luôn luôn (Always)</option>
-            </select>
-        </div>
-
-        <div class="SMOKE">
-            <label for="SMOKE" class="form-label">Có hút thuốc không: </label>
-            <select class="form-select" id="SMOKE" name="SMOKE" required >
-                <option value="">-- Chọn có hút thuốc không --</option>
-                <option value="1">Có</option>
-                <option value="0">Không</option>
-            </select>
-        </div>
-        
-        <div class="CH2O">
-            <label for="CH2O" class="form-label">Lượng nước uống hằng ngày: </label>
-            <input type="number" step="0.1" class="form-control" id="CH2O" name="CH2O" required>
-        </div>
-        
-        <div class="SCC">
-            <label for="SCC" class="form-label">Có theo dõi lượng Calo tiêu thụ hay ko?</label>
-            <select class="form-select" id="SCC" name="SCC" required >  
-                <option value="">-- Chọn có theo dõi lượng Calo tiêu thụ hay ko --</option>
-                <option value="0">Không</option>
-                <option value="1">Có</option>
-            </select>
-        </div>
-        
-        <div class="FAF">
-            <label for="FAF" class="form-label">Tần suất hoạt động thể chất: </label>
-            <select class="form-select" id="FAF" name="FAF" required >
-                <option value="">-- Chọn tần suất hoạt động thể chất --</option>
-                <option value="0">Không hoạt động</option>
-                <option value="1">Hoạt động ở mức thấp</option>
-                <option value="2">Hoạt động ở mức trung bình</option>
-                <option value="3">Hoạt động thể chất thường xuyên </option>
-            </select>
-        </div>
-        
-        <div class="TUE">
-            <label for="TUE" class="form-label">Thời gian sử dụng thiết bị công nghệ</label>
-            <select class="form-select" id="TUE" name="TUE" required >
-                <option value="">-- Chọn thời gian sử dụng thiết bị công nghệ --</option>
-                <option value="0">Sử dụng rất ít hoặc chỉ dùng với mục dích cơ bản</option>
-                <option value="1">Sử dụng ở mức trung bình (vừa đủ cho học tập và làm việc)</option>
-                <option value="2">Sử dụng ở mức cao (dành phần lớn thời gian để sử dụng)</option>
-            </select>
-        </div>
-        
-        <div class="CALC">
-            <label for="CALC" class="form-label">Mức tiêu thụ rượu bia</label>
-            <select class="form-select" id="CALC" name="CALC" required >
-                <option value="">-- Chọn mức tiêu thụ rượu bia --</option>
-                <option value="0">Không (never)</option>
-                <option value="1">Thi thoảng (Sometimes)</option>
-                <option value="2">Thường xuyên (Frequently)</option>
-                <option value="3">Luôn luôn (Always)</option>
-            </select>
-        </div>
-        
-        <div class="MTRANS">
-            <label for="MTRANS" class="form-label">Phương tiện di chuyển chính:</label>
-            <select class="form-select" id="MTRANS" name="MTRANS" required >
-                <option value="">-- Chọn phương tiện di chuyển chính --</option>
-                <option value="0">Public Transportation(phương tiện công cộng)</option>
-                <option value="1">Ô tô</option>
-                <option value="2">Đi bộ</option>
-                <option value="3">Xe máy</option>
-                <option value="4">Xe đạp</option>
-            </select>
-        </div>
-
-        </div>
-
+    <div id="obesitySection" class="hidden">
+      <h4>Thông số Béo Phì</h4>
+      <!-- Các trường nhập liệu cho hồ sơ bệnh béo phì -->
+      <div class="mb-3">
+        <label for="obesity_gender" class="form-label">Giới tính (Nam/Nữ):</label>
+        <select class="form-select" id="obesity_gender" name="obesity_gender" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Nam</option>
+          <option value="0">Nữ</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="obesity_age" class="form-label">Tuổi:</label>
+        <input type="number" class="form-control" id="obesity_age" name="obesity_age" required>
+      </div>
+      <div class="mb-3">
+        <label for="obesity_height" class="form-label">Chiều cao (m):</label>
+        <input type="number" step="0.01" class="form-control" id="obesity_height" name="obesity_height" max="2.5" required>
+      </div>
+      <div class="mb-3">
+        <label for="obesity_weight" class="form-label">Cân nặng (kg):</label>
+        <input type="number" step="0.05" class="form-control" id="obesity_weight" name="obesity_weight" required>
+      </div>
+      <div class="mb-3">
+        <label for="family_history_with_overweight" class="form-label">Gia đình có người bị thừa cân? (Yes/No):</label>
+        <select class="form-select" id="family_history_with_overweight" name="family_history_with_overweight" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="FAVC" class="form-label">Tiêu thụ thực phẩm giàu calo thường xuyên? (Yes/No):</label>
+        <select class="form-select" id="FAVC" name="FAVC" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="FCVC" class="form-label">Mức độ ăn rau:</label>
+        <select class="form-select" id="FCVC" name="FCVC" required>
+          <option value="">-- Chọn --</option>
+          <option value="0">Ăn ít hoặc ko ăn</option>
+          <option value="1">Ăn đủ</option>
+          <option value="2">Ăn nhiều</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="NCP" class="form-label">Số bữa ăn chính trong ngày:</label>
+        <select class="form-select" id="NCP" name="NCP" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">1 bữa</option>
+          <option value="2">2 bữa</option>
+          <option value="3">3 bữa</option>
+          <option value="4">Nhiều hơn</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="CAEC" class="form-label">Thói quen ăn vặt giữa các bữa:</label>
+        <select class="form-select" id="CAEC" name="CAEC" required>
+          <option value="">-- Chọn --</option>
+          <option value="0">Không(No)</option>
+          <option value="1">Thi thoảng(Sometimes)</option>
+          <option value="2">Thường xuyên(Frequently)</option>
+          <option value="3">Luôn luôn(Always)</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="SMOKE" class="form-label">Có hút thuốc không? (Yes/No):</label>
+        <select class="form-select" id="SMOKE" name="SMOKE" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="CH2O" class="form-label">Lượng nước uống hàng ngày (lít):</label>
+        <input type="number" step="0.1" class="form-control" id="CH2O" name="CH2O" required>
+      </div>
+      <div class="mb-3">
+        <label for="SCC" class="form-label">Có theo dõi lượng calo tiêu thụ? (Yes/No):</label>
+        <select class="form-select" id="SCC" name="SCC" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="FAF" class="form-label">Tần suất hoạt động thể chất:</label>
+        <select class="form-select" id="FAF" name="FAF" required>
+          <option value="">-- Chọn --</option>
+          <option value="0">Không hoạt động</option>
+          <option value="1">Hoạt động ở mức thấp</option>
+          <option value="2">Hoạt động ở mức bình thường</option>
+          <option value="3">Hoạt động thường xuyên</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="TUE" class="form-label">Thời gian sử dụng thiết bị công nghệ (0 đến 2):</label>
+        <select class="form-select" id="TUE" name="TUE" required>
+          <option value="">-- Chọn --</option>
+          <option value="0">Sử dụng rất ít hoặc chỉ dùng cho các mục đích cơ bản </option>
+          <option value="1">Sử dụng ở mức trung bình, vừa đủ cho công việc, học tập và giải trí.</option>
+          <option value="2">Sử dụng với tần suất cao, dành nhiều thời gian cho việc lướt web, giải trí hoặc làm việc trên thiết bị công nghệ</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="CALC" class="form-label">Mức tiêu thụ rượu bia (0: No, 1: Sometimes, 2: Frequently, 3: Always):</label>
+        <select class="form-select" id="CALC" name="CALC" required>
+          <option value="">-- Chọn --</option>
+          <option value="0">Không(No)</option>
+          <option value="1">Thi thoảng(Sometimes)</option>
+          <option value="2">Thường xuyên(Frequently)</option>
+          <option value="3">Luôn luôn(Always)</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="MTRANS" class="form-label">Phương tiện di chuyển chính:</label>
+        <select class="form-select" id="MTRANS" name="MTRANS" required>
+          <option value="">-- Chọn --</option>
+          <option value="1">Automobile</option>
+          <option value="4">Bike</option>
+          <option value="3">Motorbike</option>
+          <option value="0">Public Transportation</option>
+          <option value="2">Walking</option>
+        </select>
+      </div>
+      
+    </div>
 
     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
   </form>
@@ -340,22 +326,28 @@
   const diagnosisType = document.getElementById("diagnosisType");
   const heartSection = document.getElementById("heartSection");
   const depressionSection = document.getElementById("depressionSection");
+  const obesitySection = document.getElementById("obesitySection");
 
-  // Ban đầu, disable tất cả input của 2 section
+  // Ban đầu, disable tất cả input của 3 section
   heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
   depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+  obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = true);
 
   diagnosisType.addEventListener("change", function() {
     if (this.value === "heart1") {
       heartSection.classList.remove("hidden");
       depressionSection.classList.add("hidden");
+      obesitySection.classList.add("hidden");
       heartSection.querySelectorAll("input, select").forEach(el => el.disabled = false);
       depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = true);
     } else if (this.value === "depression2") {
       depressionSection.classList.remove("hidden");
       heartSection.classList.add("hidden");
+      obesitySection.classList.add("hidden");
       depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = false);
       heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = true);
     } else if (this.value === "NutriAI") {
       obesitySection.classList.remove("hidden");
       heartSection.classList.add("hidden");
@@ -366,8 +358,10 @@
     } else {
       heartSection.classList.add("hidden");
       depressionSection.classList.add("hidden");
+      obesitySection.classList.add("hidden");
       heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
       depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+      obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = true);
     }
   });
 
@@ -419,26 +413,29 @@
         model_choice: formData.get("model_choice_depress")
       };
     } else if (diagnosis === "NutriAI") {
-        dataToSave = {
-            ...dataToSave,
-            gender: formData.get("obesity_gender"),
-            age: formData.get("obesity_age"),
-            height: formData.get("obesity_height"),
-            weight: formData.get("obesity_weight"),
-            family_history_with_overweight: formData.get("family_history_with_overweight"),
-            FAVC: formData.get("FAVC"),
-            FCVC: formData.get("FCVC"),
-            CAEC: formData.get("CAEC"),
-            SMOKE: formData.get("SMOKE"),
-            CH2O: formData.get("CH2O"),
-            SCC: formData.get("SCC"),
-            FAF: formData.get("FAF"),
-            TUE: formData.get("TUE"),
-            CALC: formData.get("CALC"),
-            MTRANS: formData.get("MTRANS"),
-        };
-    }  
+      dataToSave = {
+        ...dataToSave,
+        // Các trường của hồ sơ bệnh béo phì
+        gender: formData.get("obesity_gender"),
+        age: formData.get("obesity_age"),
+        height: formData.get("obesity_height"),
+        weight: formData.get("obesity_weight"),
+        family_history_with_overweight: formData.get("family_history_with_overweight"),
+        FAVC: formData.get("FAVC"),
+        FCVC: formData.get("FCVC"),
+        NCP: formData.get("NCP"),
+        CAEC: formData.get("CAEC"),
+        SMOKE: formData.get("SMOKE"),
+        CH2O: formData.get("CH2O"),
+        SCC: formData.get("SCC"),
+        FAF: formData.get("FAF"),
+        TUE: formData.get("TUE"),
+        CALC: formData.get("CALC"),
+        MTRANS: formData.get("MTRANS"),
+      };
+    }
 
+    // Lưu dữ liệu vào Firebase Realtime Database (trường ket_qua vẫn giữ giá trị "null")
     const diagnosisRef = ref(database, "diagnosis");
     push(diagnosisRef, dataToSave)
       .then(() => {
@@ -446,9 +443,11 @@
         form.reset();
         heartSection.classList.add("hidden");
         depressionSection.classList.add("hidden");
-        // Sau khi reset form, disable lại các input của 2 section
+        obesitySection.classList.add("hidden");
+        // Sau khi reset form, disable lại các input của 3 section
         heartSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
         depressionSection.querySelectorAll("input, select").forEach(el => el.disabled = true);
+        obesitySection.querySelectorAll("input, select").forEach(el => el.disabled = true);
       })
       .catch((error) => {
         console.error("Lỗi khi lưu dữ liệu:", error);
